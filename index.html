@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Golf Training Tracker Pro - Fast Input</title>
+    <title>Golf Training Tracker - Final Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         * {
@@ -302,7 +302,7 @@
         }
 
         .shots-list {
-            max-height: 300px;
+            max-height: 400px;
             overflow-y: auto;
             background: rgba(13, 13, 17, 0.5);
             border-radius: 6px;
@@ -312,36 +312,67 @@
         .shot-entry {
             background: rgba(88, 166, 255, 0.1);
             border-left: 3px solid #58a6ff;
-            padding: 0.75rem;
-            margin-bottom: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
             border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 0.5rem;
         }
 
         .shot-entry-text {
-            flex: 1;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: #e0e6ed;
             word-break: break-all;
+            line-height: 1.4;
+        }
+
+        .shot-entry-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .shot-copy-btn {
+            flex: 1;
+            min-width: 100px;
+            background: #58a6ff;
+            color: #0d1117;
+            border: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .shot-copy-btn:active {
+            background: #79c0ff;
+            transform: scale(0.95);
+        }
+
+        .shot-copy-btn.copied {
+            background: #3fb950;
+            color: white;
         }
 
         .shot-delete-btn {
             background: #da3633;
             color: white;
             border: none;
-            padding: 0.3rem 0.6rem;
+            padding: 0.5rem 0.75rem;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 600;
-            margin-left: 0.5rem;
-            flex-shrink: 0;
+            transition: all 0.2s ease;
         }
 
         .shot-delete-btn:active {
             background: #f85149;
+            transform: scale(0.95);
         }
 
         .no-shots-message {
@@ -394,9 +425,10 @@
         }
 
         .input-modal-metric {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: #58a6ff;
+            line-height: 1.3;
         }
 
         .input-modal-display {
@@ -492,51 +524,33 @@
             font-size: 1rem;
         }
 
-        .export-text-area {
+        .copy-full-session-btn {
             width: 100%;
             padding: 1rem;
-            background: #0d1117;
-            border: 1px solid #3fb950;
-            border-radius: 6px;
-            color: #e0e6ed;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            resize: vertical;
-            min-height: 150px;
-            line-height: 1.6;
-            word-break: break-all;
-        }
-
-        .export-text-area:focus {
-            outline: none;
-            border-color: #58a6ff;
-            box-shadow: 0 0 8px rgba(88, 166, 255, 0.2);
-        }
-
-        .copy-all-btn {
-            width: 100%;
-            padding: 0.875rem;
-            background: #58a6ff;
+            background: linear-gradient(135deg, #58a6ff, #79c0ff);
             color: #0d1117;
             border: none;
             border-radius: 6px;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 1rem;
             cursor: pointer;
-            margin-top: 1rem;
             transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        .copy-all-btn:active {
-            background: #79c0ff;
+        .copy-full-session-btn:active {
             transform: scale(0.98);
+            box-shadow: 0 0 20px rgba(88, 166, 255, 0.3);
         }
 
         .copy-feedback {
             text-align: center;
             color: #3fb950;
             font-size: 0.85rem;
-            margin-top: 0.5rem;
+            margin-top: 1rem;
             display: none;
+            font-weight: 600;
         }
 
         .copy-feedback.show {
@@ -556,6 +570,10 @@
                 padding: 1.5rem;
             }
 
+            .input-modal-metric {
+                font-size: 1.25rem;
+            }
+
             .input-modal-display-value {
                 font-size: 2.5rem;
             }
@@ -569,14 +587,22 @@
                 padding: 1rem;
                 font-size: 1rem;
             }
+
+            .shot-entry {
+                padding: 0.75rem;
+            }
+
+            .shot-entry-text {
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="app-container mobile-optimized">
         <div class="header">
-            <h1>⛳ Golf Training Tracker Pro</h1>
-            <p>Fast Sequence Input - 7-Iron Control</p>
+            <h1>⛳ Golf Training Tracker</h1>
+            <p>Final Edition - 7-Iron Control</p>
         </div>
 
         <!-- Progress Bar -->
@@ -601,9 +627,9 @@
 
         <!-- Export All Data Section -->
         <div class="export-section">
-            <div class="export-title">📤 Export All Session Data</div>
-            <button class="copy-all-btn" onclick="generateAllExport()">📋 Generate & Copy All Data</button>
-            <div class="copy-feedback" id="copy-feedback">✓ Copied to clipboard!</div>
+            <div class="export-title">📤 Copy Full Session Data</div>
+            <button class="copy-full-session-btn" onclick="copyFullSession()">📋 Copy All Shots to Clipboard</button>
+            <div class="copy-feedback" id="copy-feedback">✓ All shots copied to clipboard!</div>
         </div>
 
         <!-- Reset Button -->
@@ -615,7 +641,7 @@
         <div class="input-modal">
             <div class="input-modal-header">
                 <div class="input-modal-step" id="modal-step-text">Step 1/10</div>
-                <div class="input-modal-metric" id="modal-metric-name">AA (Attack Angle)</div>
+                <div class="input-modal-metric" id="modal-metric-name">Attack Angle (AA)</div>
             </div>
 
             <div class="input-modal-display">
@@ -635,19 +661,19 @@
                 <button class="input-numpad-btn" onclick="modalInput('2')">2</button>
                 <button class="input-numpad-btn" onclick="modalInput('3')">3</button>
 
-                <button class="input-numpad-btn backspace" onclick="modalBackspace()">⌫</button>
+                <button class="input-numpad-btn backspace" onclick="modalBackspace()">⌫ Backspace</button>
                 <button class="input-numpad-btn operator" onclick="modalInput('0')">0</button>
                 <button class="input-numpad-btn operator" onclick="modalInput('.')">.</button>
 
                 <button class="input-numpad-btn operator" onclick="modalInput('-')">−</button>
-                <button class="input-numpad-btn" colspan="2"></button>
+                <button class="input-numpad-btn" style="visibility: hidden;"></button>
                 <button class="input-numpad-btn next" onclick="modalNext()">→ NEXT</button>
             </div>
         </div>
     </div>
 
     <script>
-        // ===== SHOT METRICS FIELDS =====
+        // ===== SHOT METRICS FIELDS WITH FULL NAMES =====
         const SHOT_FIELDS = [
             { key: "AA", label: "AA", fullName: "Attack Angle" },
             { key: "SL", label: "SL", fullName: "Spin Loft" },
@@ -672,8 +698,7 @@
                     "Wedge shots (50% power)",
                     "'Feet together' 7-iron drills"
                 ],
-                hasShots: true,
-                metrics: {}
+                hasShots: true
             },
             {
                 id: 2,
@@ -684,8 +709,7 @@
                     "Heavy Compression (AA -5.0°)",
                     "Shallow Compression (AA -2.0°)"
                 ],
-                hasShots: true,
-                metrics: {}
+                hasShots: true
             },
             {
                 id: 3,
@@ -696,8 +720,7 @@
                     "Straight (Zeroed)",
                     "Fade (Path -)"
                 ],
-                hasShots: true,
-                metrics: {}
+                hasShots: true
             },
             {
                 id: 4,
@@ -709,8 +732,7 @@
                     "High Launch (High)",
                     "Challenge: Hit 3 different heights in a row"
                 ],
-                hasShots: true,
-                metrics: {}
+                hasShots: true
             },
             {
                 id: 5,
@@ -721,12 +743,11 @@
                     "Stretching",
                     "Log final session summary"
                 ],
-                hasShots: true,
-                metrics: {}
+                hasShots: true
             }
         ];
 
-        const STORAGE_KEY = "golfTrainingSessionProV2";
+        const STORAGE_KEY = "golfTrackerFinalEdition";
         let sessionState = {
             startTime: null,
             totalElapsedSeconds: 0,
@@ -792,6 +813,13 @@
                 `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         }
 
+        // ===== SHOT DATA FORMATTING =====
+        function formatShotWithLabels(shotObject) {
+            return SHOT_FIELDS
+                .map(field => `${field.label}:${shotObject[field.key]}`)
+                .join(" ");
+        }
+
         // ===== GUIDED INPUT MODAL =====
         function openInputModal(phaseId) {
             inputModalState.isOpen = true;
@@ -816,7 +844,7 @@
             const stepNum = inputModalState.currentFieldIndex + 1;
 
             document.getElementById("modal-step-text").textContent = `Step ${stepNum}/10`;
-            document.getElementById("modal-metric-name").textContent = `${field.label} (${field.fullName})`;
+            document.getElementById("modal-metric-name").textContent = `${field.fullName} (${field.label})`;
             document.getElementById("modal-display-value").textContent = inputModalState.inputBuffer || "0";
         }
 
@@ -867,10 +895,7 @@
             const phaseId = inputModalState.currentPhase;
             const phaseState = sessionState.phases[phaseId];
 
-            // Create shot string in order
-            const shotString = SHOT_FIELDS.map(field => inputModalState.currentShot[field.key]).join(" ");
-
-            phaseState.shots.push(shotString);
+            phaseState.shots.push(inputModalState.currentShot);
             saveSessionState();
 
             closeInputModal();
@@ -911,17 +936,23 @@
                         <div class="shots-history-section">
                             <div class="shots-history-title">📊 Logged Shots (${shotCount})</div>
                             <button class="btn-log-shot" onclick="openInputModal(${phase.id})">
-                                🎯 Log New Shot (Fast Input)
+                                🎯 Log New Shot
                             </button>
                             <div class="shots-list">
                                 ${phaseState.shots.length === 0 ? 
                                     `<div class="no-shots-message">No shots logged yet. Click "Log New Shot" to start.</div>` :
-                                    phaseState.shots.map((shot, idx) => `
-                                        <div class="shot-entry">
-                                            <div class="shot-entry-text">${shot}</div>
-                                            <button class="shot-delete-btn" onclick="deleteShot(${phase.id}, ${idx})">Delete</button>
-                                        </div>
-                                    `).join("")
+                                    phaseState.shots.map((shot, idx) => {
+                                        const formattedShot = formatShotWithLabels(shot);
+                                        return `
+                                            <div class="shot-entry">
+                                                <div class="shot-entry-text">${formattedShot}</div>
+                                                <div class="shot-entry-actions">
+                                                    <button class="shot-copy-btn" onclick="copyShotToClipboard(${phase.id}, ${idx}, '${formattedShot.replace(/'/g, "\\'")}')">📋 Copy</button>
+                                                    <button class="shot-delete-btn" onclick="deleteShot(${phase.id}, ${idx})">🗑️ Delete</button>
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join("")
                                 }
                             </div>
                         </div>
@@ -986,6 +1017,35 @@
             }
         }
 
+        function copyShotToClipboard(phaseId, shotIndex, formattedText) {
+            navigator.clipboard.writeText(formattedText).then(() => {
+                // Find the button and change its appearance
+                const buttons = document.querySelectorAll('.shot-copy-btn');
+                let shotCount = 0;
+                
+                for (let pid = 1; pid <= phaseId; pid++) {
+                    if (pid < phaseId) {
+                        shotCount += sessionState.phases[pid].shots.length;
+                    }
+                }
+                shotCount += shotIndex;
+
+                const button = buttons[shotCount];
+                if (button) {
+                    const originalText = button.textContent;
+                    button.textContent = "✓ Copied!";
+                    button.classList.add("copied");
+
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.classList.remove("copied");
+                    }, 2000);
+                }
+            }).catch(() => {
+                alert("Could not copy to clipboard.");
+            });
+        }
+
         function completePhase(phaseId) {
             const phaseState = sessionState.phases[phaseId];
             const phase = phases.find(p => p.id === phaseId);
@@ -1032,7 +1092,7 @@
         }
 
         // ===== EXPORT FUNCTIONALITY =====
-        function generateAllExport() {
+        function copyFullSession() {
             let exportLines = [];
 
             phases.forEach(phase => {
@@ -1040,7 +1100,8 @@
                 if (phaseState.shots.length > 0) {
                     exportLines.push(`[Phase ${phase.id}: ${phase.title}]`);
                     phaseState.shots.forEach(shot => {
-                        exportLines.push(shot);
+                        const formattedShot = formatShotWithLabels(shot);
+                        exportLines.push(formattedShot);
                     });
                     exportLines.push(""); // blank line between phases
                 }
@@ -1053,7 +1114,6 @@
 
             const exportText = exportLines.join("\n");
 
-            // Copy to clipboard
             navigator.clipboard.writeText(exportText).then(() => {
                 const feedback = document.getElementById("copy-feedback");
                 feedback.classList.add("show");
@@ -1061,7 +1121,7 @@
                     feedback.classList.remove("show");
                 }, 2000);
             }).catch(() => {
-                alert("Could not copy to clipboard. Please try again.");
+                alert("Could not copy to clipboard.");
             });
         }
 
