@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golf Training Tracker - 7-Iron Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0d1117;
+            color: #e0e6ed;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            padding: 1rem;
+        }
+
+        .timer-display {
+            font-size: 3.5rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.05em;
+            color: #58a6ff;
+            text-shadow: 0 0 10px rgba(88, 166, 255, 0.3);
+        }
+
+        .phase-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .phase-card.locked {
+            opacity: 0.5;
+            pointer-events: none;
+            border-color: #444c56;
+        }
+
+        .phase-card.active {
+            background: #0d47a1;
+            border-color: #58a6ff;
+            box-shadow: 0 0 20px rgba(88, 166, 255, 0.2);
+        }
+
+        .phase-card.completed {
+            background: #238636;
+            border-color: #3fb950;
+            box-shadow: 0 0 15px rgba(63, 185, 80, 0.15);
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .phase-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .phase-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(88, 166, 255, 0.1);
+            color: #58a6ff;
+        }
+
+        .phase-badge.locked {
+            background: rgba(139, 148, 158, 0.1);
+            color: #8b949e;
+        }
+
+        .phase-badge.completed {
+            background: rgba(63, 185, 80, 0.1);
+            color: #3fb950;
+        }
+
+        .drill-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: rgba(48, 54, 61, 0.5);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .drill-item:hover {
+            background: rgba(48, 54, 61, 0.8);
+        }
+
+        .drill-item.completed {
+            background: rgba(63, 185, 80, 0.1);
+        }
+
+        .drill-checkbox {
+            width: 1.5rem;
+            height: 1.5rem;
+            min-width: 1.5rem;
+            margin-right: 0.75rem;
+            margin-top: 0.125rem;
+            cursor: pointer;
+            accent-color: #58a6ff;
+        }
+
+        .drill-text {
+            flex: 1;
+            text-decoration: none;
+        }
+
+        .drill-item.completed .drill-text {
+            text-decoration: line-through;
+            color: #8b949e;
+        }
+
+        .metrics-section {
+            background: rgba(13, 71, 161, 0.1);
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .metric-input-group {
+            margin-bottom: 1rem;
+        }
+
+        .metric-input-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .metric-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #58a6ff;
+        }
+
+        .metric-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #e0e6ed;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .metric-input:focus {
+            outline: none;
+            border-color: #58a6ff;
+            box-shadow: 0 0 8px rgba(88, 166, 255, 0.2);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.875rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-primary {
+            background: #58a6ff;
+            color: #0d1117;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+            box-shadow: 0 0 15px rgba(88, 166, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: #30363d;
+            color: #e0e6ed;
+        }
+
+        .btn-secondary:active {
+            background: #444c56;
+        }
+
+        .btn-disabled {
+            background: #444c56;
+            color: #8b949e;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .progress-container {
+            background: #161b22;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #30363d;
+        }
+
+        .progress-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #8b949e;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #30363d;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #58a6ff, #79c0ff);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(88, 166, 255, 0.3);
+        }
+
+        .timer-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .timer-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #8b949e;
+            margin-bottom: 0.5rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #58a6ff, #79c0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #8b949e;
+            font-size: 0.95rem;
+        }
+
+        .summary-section {
+            background: rgba(63, 185, 80, 0.1);
+            border: 1px solid #3fb950;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .summary-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #3fb950;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: #0d1117;
+            border: 1px solid #3fb950;
+            border-radius: 6px;
+            color: #e0e6ed;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .summary-input:focus {
+            outline: none;
+            border-color: #58a6ff;
+            box-shadow: 0 0 8px rgba(88, 166, 255, 0.2);
+        }
+
+        .lock-icon {
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .check-icon {
+            display: inline-block;
+            color: #3fb950;
+        }
+
+        .mobile-optimized {
+            max-width: 100%;
+            touch-action: manipulation;
+        }
+
+        .phase-time {
+            color: #79c0ff;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .btn-reset {
+            width: 100%;
+            padding: 0.75rem;
+            background: #da3633;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-reset:active {
+            background: #f85149;
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 480px) {
+            .timer-display {
+                font-size: 3rem;
+            }
+
+            .phase-card {
+                padding: 1rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                padding: 1rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container mobile-optimized">
+        <div class="header">
+            <h1>⛳ Golf Training Tracker</h1>
+            <p>7-Iron: Total Club Control Session</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-label">
+                <span>Session Progress</span>
+                <span id="progress-text">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Total Time Elapsed -->
+        <div class="timer-container">
+            <div class="timer-label">Total Elapsed Time</div>
+            <div class="timer-display" id="total-timer">00:00</div>
+        </div>
+
+        <!-- Phases Container -->
+        <div id="phases-container"></div>
+
+        <!-- Reset Button -->
+        <button class="btn-reset" onclick="resetSession()">Reset Session</button>
+    </div>
+
+    <script>
+        // ===== DATA STRUCTURE & CONFIG =====
+        const phases = [
+            {
+                id: 1,
+                title: "Warm-up & Rhythm",
+                duration: 15, // minutes
+                drills: [
+                    "Joints rotation",
+                    "Wedge shots (50% power)",
+                    "'Feet together' 7-iron drills"
+                ],
+                hasMetrics: false,
+                metrics: {}
+            },
+            {
+                id: 2,
+                title: "Contact & Low Point Control",
+                duration: 30,
+                drills: [
+                    "'Line in the sand' visualization",
+                    "Heavy Compression (AA -5.0°)",
+                    "Shallow Compression (AA -2.0°)"
+                ],
+                hasMetrics: true,
+                metricFields: [
+                    { key: "sweetSpotAA", label: "Sweet Spot Attack Angle (AA °)", placeholder: "e.g., -3.5" }
+                ],
+                metrics: {}
+            },
+            {
+                id: 3,
+                title: "Shaping Shots",
+                duration: 30,
+                drills: [
+                    "Draw (Path +)",
+                    "Straight (Zeroed)",
+                    "Fade (Path -)"
+                ],
+                hasMetrics: true,
+                metricFields: [
+                    { key: "drawCP", label: "Club Path for Draw (CP °)", placeholder: "e.g., +2.5" }
+                ],
+                metrics: {}
+            },
+            {
+                id: 4,
+                title: "Trajectory & Distance",
+                duration: 30,
+                drills: [
+                    "Stinger (Low)",
+                    "Standard (Mid)",
+                    "High Launch (High)",
+                    "Challenge: Hit 3 different heights in a row"
+                ],
+                hasMetrics: false,
+                metrics: {}
+            },
+            {
+                id: 5,
+                title: "Pressure Test & Cool Down",
+                duration: 15,
+                drills: [
+                    "'9 Windows' game",
+                    "Stretching",
+                    "Log final session summary"
+                ],
+                hasMetrics: true,
+                metricFields: [
+                    { key: "sessionSummary", label: "Session Summary Notes", placeholder: "What did you learn today?", type: "textarea" }
+                ],
+                metrics: {}
+            }
+        ];
+
+        const STORAGE_KEY = "golfTrainingSession";
+        let sessionState = {
+            startTime: null,
+            totalElapsedSeconds: 0,
+            phases: {}
+        };
+
+        // ===== INITIALIZATION =====
+        function init() {
+            loadSessionState();
+            renderPhases();
+            startGlobalTimer();
+            updateProgress();
+        }
+
+        function loadSessionState() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                sessionState = JSON.parse(saved);
+            } else {
+                sessionState = {
+                    startTime: Date.now(),
+                    totalElapsedSeconds: 0,
+                    phases: {}
+                };
+                phases.forEach(phase => {
+                    sessionState.phases[phase.id] = {
+                        status: phase.id === 1 ? "active" : "locked",
+                        drillsCompleted: new Array(phase.drills.length).fill(false),
+                        metrics: {},
+                        timerSeconds: phase.duration * 60
+                    };
+                });
+                saveSessionState();
+            }
+        }
+
+        function saveSessionState() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(sessionState));
+        }
+
+        // ===== GLOBAL TIMER =====
+        function startGlobalTimer() {
+            setInterval(() => {
+                const now = Date.now();
+                const startTime = sessionState.startTime || now;
+                sessionState.totalElapsedSeconds = Math.floor((now - startTime) / 1000);
+                updateTotalTimer();
+            }, 1000);
+        }
+
+        function updateTotalTimer() {
+            const minutes = Math.floor(sessionState.totalElapsedSeconds / 60);
+            const seconds = sessionState.totalElapsedSeconds % 60;
+            document.getElementById("total-timer").textContent = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        // ===== PHASE RENDERING =====
+        function renderPhases() {
+            const container = document.getElementById("phases-container");
+            container.innerHTML = "";
+
+            phases.forEach(phase => {
+                const phaseState = sessionState.phases[phase.id];
+                const isCompleted = phaseState.status === "completed";
+                const isActive = phaseState.status === "active";
+                const isLocked = phaseState.status === "locked";
+
+                const phaseCard = document.createElement("div");
+                phaseCard.className = `phase-card ${isActive ? "active" : ""} ${isCompleted ? "completed" : ""} ${isLocked ? "locked" : ""}`;
+
+                let statusBadge = "locked";
+                if (isCompleted) statusBadge = "completed";
+                else if (isActive) statusBadge = "active";
+
+                const drillsCompleted = phaseState.drillsCompleted.filter(Boolean).length;
+                const totalDrills = phase.drills.length;
+
+                let badgeText = "🔒 Locked";
+                if (isCompleted) badgeText = "✓ Completed";
+                else if (isActive) badgeText = "● Active";
+
+                phaseCard.innerHTML = `
+                    <div class="phase-header">
+                        <div>
+                            <div class="phase-title">Phase ${phase.id}: ${phase.title}</div>
+                            <div class="phase-time">${phase.duration} minutes</div>
+                        </div>
+                        <span class="phase-badge ${statusBadge}">${badgeText}</span>
+                    </div>
+
+                    <div id="phase-${phase.id}-drills" class="drills-list">
+                        ${phase.drills.map((drill, idx) => `
+                            <label class="drill-item ${phaseState.drillsCompleted[idx] ? "completed" : ""}">
+                                <input type="checkbox" class="drill-checkbox" 
+                                    data-phase="${phase.id}" data-drill="${idx}"
+                                    ${phaseState.drillsCompleted[idx] ? "checked" : ""}
+                                    ${isLocked ? "disabled" : ""}
+                                    onchange="toggleDrill(${phase.id}, ${idx})">
+                                <span class="drill-text">${drill}</span>
+                            </label>
+                        `).join("")}
+                    </div>
+
+                    ${phase.hasMetrics ? `
+                        <div class="metrics-section">
+                            <div style="font-weight: 600; margin-bottom: 1rem; color: #58a6ff;">
+                                📊 Log Your Metrics
+                            </div>
+                            <div id="phase-${phase.id}-metrics">
+                                ${phase.metricFields.map(field => `
+                                    <div class="metric-input-group">
+                                        <label class="metric-label">${field.label}</label>
+                                        <${field.type === "textarea" ? "textarea" : "input"} 
+                                            type="${field.type === "textarea" ? "" : "number"}"
+                                            class="metric-input"
+                                            data-phase="${phase.id}" data-metric="${field.key}"
+                                            placeholder="${field.placeholder}"
+                                            ${field.type === "textarea" ? "style='resize: vertical; min-height: 100px;'" : "step='0.1'"}
+                                            onchange="saveMetric(${phase.id}, '${field.key}', this.value)">
+                                        ${field.type === "textarea" ? "</textarea>" : "</input>"}
+                                    </div>
+                                `).join("")}
+                            </div>
+                        </div>
+                    ` : ""}
+
+                    <div class="button-group">
+                        ${!isCompleted ? `
+                            <button class="btn btn-primary" 
+                                onclick="completePhase(${phase.id})"
+                                ${drillsCompleted < totalDrills || isLocked ? "disabled style='opacity: 0.5; cursor: not-allowed;'" : ""}>
+                                Mark Complete
+                            </button>
+                        ` : ""}
+                        ${isCompleted && phase.id < phases.length ? `
+                            <button class="btn btn-secondary" onclick="resetPhase(${phase.id})">Redo Phase</button>
+                        ` : ""}
+                    </div>
+                `;
+
+                container.appendChild(phaseCard);
+
+                // Restore metric values
+                if (phase.hasMetrics && phase.metricFields) {
+                    phase.metricFields.forEach(field => {
+                        const input = document.querySelector(
+                            `input[data-phase="${phase.id}"][data-metric="${field.key}"], 
+                             textarea[data-phase="${phase.id}"][data-metric="${field.key}"]`
+                        );
+                        if (input && phaseState.metrics[field.key]) {
+                            input.value = phaseState.metrics[field.key];
+                        }
+                    });
+                }
+            });
+        }
+
+        // ===== PHASE ACTIONS =====
+        function toggleDrill(phaseId, drillIndex) {
+            const phaseState = sessionState.phases[phaseId];
+            phaseState.drillsCompleted[drillIndex] = !phaseState.drillsCompleted[drillIndex];
+            saveSessionState();
+            renderPhases();
+        }
+
+        function saveMetric(phaseId, metricKey, value) {
+            const phaseState = sessionState.phases[phaseId];
+            phaseState.metrics[metricKey] = value;
+            saveSessionState();
+        }
+
+        function completePhase(phaseId) {
+            const phaseState = sessionState.phases[phaseId];
+            const phase = phases.find(p => p.id === phaseId);
+
+            // Check if all drills are completed
+            const allCompleted = phaseState.drillsCompleted.every(Boolean);
+            if (!allCompleted) {
+                alert("Please complete all drills before marking the phase as complete.");
+                return;
+            }
+
+            phaseState.status = "completed";
+
+            // Unlock next phase
+            if (phaseId < phases.length) {
+                sessionState.phases[phaseId + 1].status = "active";
+            }
+
+            saveSessionState();
+            updateProgress();
+            renderPhases();
+        }
+
+        function resetPhase(phaseId) {
+            const phaseState = sessionState.phases[phaseId];
+            phaseState.drillsCompleted = new Array(phases[phaseId - 1].drills.length).fill(false);
+            phaseState.status = "active";
+            phaseState.metrics = {};
+            saveSessionState();
+            renderPhases();
+        }
+
+        // ===== PROGRESS CALCULATION =====
+        function updateProgress() {
+            let completedPhases = 0;
+            phases.forEach(phase => {
+                if (sessionState.phases[phase.id].status === "completed") {
+                    completedPhases++;
+                }
+            });
+
+            const percentage = Math.round((completedPhases / phases.length) * 100);
+            document.getElementById("progress-fill").style.width = percentage + "%";
+            document.getElementById("progress-text").textContent = percentage + "%";
+        }
+
+        // ===== RESET SESSION =====
+        function resetSession() {
+            if (confirm("Are you sure you want to reset the entire session? This cannot be undone.")) {
+                localStorage.removeItem(STORAGE_KEY);
+                sessionState = {
+                    startTime: Date.now(),
+                    totalElapsedSeconds: 0,
+                    phases: {}
+                };
+                phases.forEach(phase => {
+                    sessionState.phases[phase.id] = {
+                        status: phase.id === 1 ? "active" : "locked",
+                        drillsCompleted: new Array(phase.drills.length).fill(false),
+                        metrics: {},
+                        timerSeconds: phase.duration * 60
+                    };
+                });
+                saveSessionState();
+                renderPhases();
+                updateProgress();
+            }
+        }
+
+        // Start the app
+        init();
+    </script>
+</body>
+</html>
