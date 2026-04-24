@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Golf Training Tracker - 7-Iron Control</title>
+    <title>Golf Training Tracker Pro - Fast Input</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         * {
@@ -131,55 +131,16 @@
             color: #8b949e;
         }
 
-        .metrics-section {
-            background: rgba(13, 71, 161, 0.1);
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-top: 1rem;
-        }
-
-        .metric-input-group {
-            margin-bottom: 1rem;
-        }
-
-        .metric-input-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .metric-label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #58a6ff;
-        }
-
-        .metric-input {
-            width: 100%;
-            padding: 0.75rem;
-            background: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 6px;
-            color: #e0e6ed;
-            font-size: 1rem;
-            transition: border-color 0.2s ease;
-        }
-
-        .metric-input:focus {
-            outline: none;
-            border-color: #58a6ff;
-            box-shadow: 0 0 8px rgba(88, 166, 255, 0.2);
-        }
-
         .button-group {
             display: flex;
             gap: 0.75rem;
             margin-top: 1rem;
+            flex-wrap: wrap;
         }
 
         .btn {
             flex: 1;
+            min-width: 150px;
             padding: 0.875rem 1rem;
             border: none;
             border-radius: 8px;
@@ -201,6 +162,11 @@
             box-shadow: 0 0 15px rgba(88, 166, 255, 0.3);
         }
 
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .btn-secondary {
             background: #30363d;
             color: #e0e6ed;
@@ -210,11 +176,30 @@
             background: #444c56;
         }
 
-        .btn-disabled {
-            background: #444c56;
-            color: #8b949e;
-            cursor: not-allowed;
+        .btn-secondary:disabled {
             opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-log-shot {
+            width: 100%;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, #238636, #3fb950);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 1rem;
+        }
+
+        .btn-log-shot:active {
+            transform: scale(0.98);
+            box-shadow: 0 0 20px rgba(63, 185, 80, 0.3);
         }
 
         .progress-container {
@@ -282,60 +267,6 @@
             font-size: 0.95rem;
         }
 
-        .summary-section {
-            background: rgba(63, 185, 80, 0.1);
-            border: 1px solid #3fb950;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-top: 1rem;
-        }
-
-        .summary-label {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: #3fb950;
-            margin-bottom: 0.5rem;
-        }
-
-        .summary-input {
-            width: 100%;
-            padding: 0.75rem;
-            background: #0d1117;
-            border: 1px solid #3fb950;
-            border-radius: 6px;
-            color: #e0e6ed;
-            font-size: 1rem;
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .summary-input:focus {
-            outline: none;
-            border-color: #58a6ff;
-            box-shadow: 0 0 8px rgba(88, 166, 255, 0.2);
-        }
-
-        .lock-icon {
-            display: inline-block;
-            margin-right: 0.5rem;
-        }
-
-        .check-icon {
-            display: inline-block;
-            color: #3fb950;
-        }
-
-        .mobile-optimized {
-            max-width: 100%;
-            touch-action: manipulation;
-        }
-
-        .phase-time {
-            color: #79c0ff;
-            font-size: 0.875rem;
-            font-weight: 600;
-        }
-
         .btn-reset {
             width: 100%;
             padding: 0.75rem;
@@ -354,6 +285,264 @@
             transform: scale(0.98);
         }
 
+        /* SHOTS HISTORY SECTION */
+        .shots-history-section {
+            background: rgba(13, 71, 161, 0.1);
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .shots-history-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #58a6ff;
+            font-size: 0.95rem;
+        }
+
+        .shots-list {
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(13, 13, 17, 0.5);
+            border-radius: 6px;
+            padding: 0.75rem;
+        }
+
+        .shot-entry {
+            background: rgba(88, 166, 255, 0.1);
+            border-left: 3px solid #58a6ff;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .shot-entry-text {
+            flex: 1;
+            word-break: break-all;
+        }
+
+        .shot-delete-btn {
+            background: #da3633;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .shot-delete-btn:active {
+            background: #f85149;
+        }
+
+        .no-shots-message {
+            text-align: center;
+            color: #8b949e;
+            padding: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* GUIDED INPUT MODAL */
+        .input-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            z-index: 2000;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .input-modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-modal {
+            background: linear-gradient(135deg, #161b22 0%, #0d47a1 100%);
+            border: 2px solid #58a6ff;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 0 40px rgba(88, 166, 255, 0.4);
+        }
+
+        .input-modal-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .input-modal-step {
+            font-size: 0.9rem;
+            color: #79c0ff;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-modal-metric {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #58a6ff;
+        }
+
+        .input-modal-display {
+            background: #0d1117;
+            border: 2px solid #58a6ff;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-modal-display-value {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #58a6ff;
+            font-variant-numeric: tabular-nums;
+            word-break: break-all;
+        }
+
+        .input-numpad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-numpad-btn {
+            padding: 1.25rem;
+            background: #30363d;
+            color: #e0e6ed;
+            border: 1px solid #444c56;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+        }
+
+        .input-numpad-btn:active {
+            background: #444c56;
+            transform: scale(0.95);
+        }
+
+        .input-numpad-btn.operator {
+            background: #58a6ff;
+            color: #0d1117;
+            font-weight: 700;
+        }
+
+        .input-numpad-btn.operator:active {
+            background: #79c0ff;
+        }
+
+        .input-numpad-btn.backspace {
+            background: #da3633;
+            color: white;
+            grid-column: 1 / 3;
+        }
+
+        .input-numpad-btn.backspace:active {
+            background: #f85149;
+        }
+
+        .input-numpad-btn.next {
+            grid-column: 3;
+            background: #238636;
+            color: white;
+            font-weight: 700;
+        }
+
+        .input-numpad-btn.next:active {
+            background: #2ea043;
+        }
+
+        /* EXPORT SECTION */
+        .export-section {
+            background: rgba(63, 185, 80, 0.1);
+            border: 1px solid #3fb950;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .export-title {
+            font-weight: 600;
+            color: #3fb950;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .export-text-area {
+            width: 100%;
+            padding: 1rem;
+            background: #0d1117;
+            border: 1px solid #3fb950;
+            border-radius: 6px;
+            color: #e0e6ed;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 150px;
+            line-height: 1.6;
+            word-break: break-all;
+        }
+
+        .export-text-area:focus {
+            outline: none;
+            border-color: #58a6ff;
+            box-shadow: 0 0 8px rgba(88, 166, 255, 0.2);
+        }
+
+        .copy-all-btn {
+            width: 100%;
+            padding: 0.875rem;
+            background: #58a6ff;
+            color: #0d1117;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .copy-all-btn:active {
+            background: #79c0ff;
+            transform: scale(0.98);
+        }
+
+        .copy-feedback {
+            text-align: center;
+            color: #3fb950;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .copy-feedback.show {
+            display: block;
+        }
+
         @media (max-width: 480px) {
             .timer-display {
                 font-size: 3rem;
@@ -363,11 +552,20 @@
                 padding: 1rem;
             }
 
-            .button-group {
-                flex-direction: column;
+            .input-modal {
+                padding: 1.5rem;
             }
 
-            .btn {
+            .input-modal-display-value {
+                font-size: 2.5rem;
+            }
+
+            .input-numpad-btn {
+                padding: 1rem;
+                font-size: 1.25rem;
+            }
+
+            .btn-log-shot {
                 padding: 1rem;
                 font-size: 1rem;
             }
@@ -377,8 +575,8 @@
 <body>
     <div class="app-container mobile-optimized">
         <div class="header">
-            <h1>⛳ Golf Training Tracker</h1>
-            <p>7-Iron: Total Club Control Session</p>
+            <h1>⛳ Golf Training Tracker Pro</h1>
+            <p>Fast Sequence Input - 7-Iron Control</p>
         </div>
 
         <!-- Progress Bar -->
@@ -401,23 +599,80 @@
         <!-- Phases Container -->
         <div id="phases-container"></div>
 
+        <!-- Export All Data Section -->
+        <div class="export-section">
+            <div class="export-title">📤 Export All Session Data</div>
+            <button class="copy-all-btn" onclick="generateAllExport()">📋 Generate & Copy All Data</button>
+            <div class="copy-feedback" id="copy-feedback">✓ Copied to clipboard!</div>
+        </div>
+
         <!-- Reset Button -->
         <button class="btn-reset" onclick="resetSession()">Reset Session</button>
     </div>
 
+    <!-- Guided Input Modal -->
+    <div class="input-modal-overlay" id="input-modal-overlay">
+        <div class="input-modal">
+            <div class="input-modal-header">
+                <div class="input-modal-step" id="modal-step-text">Step 1/10</div>
+                <div class="input-modal-metric" id="modal-metric-name">AA (Attack Angle)</div>
+            </div>
+
+            <div class="input-modal-display">
+                <div class="input-modal-display-value" id="modal-display-value">0</div>
+            </div>
+
+            <div class="input-numpad-grid">
+                <button class="input-numpad-btn" onclick="modalInput('7')">7</button>
+                <button class="input-numpad-btn" onclick="modalInput('8')">8</button>
+                <button class="input-numpad-btn" onclick="modalInput('9')">9</button>
+
+                <button class="input-numpad-btn" onclick="modalInput('4')">4</button>
+                <button class="input-numpad-btn" onclick="modalInput('5')">5</button>
+                <button class="input-numpad-btn" onclick="modalInput('6')">6</button>
+
+                <button class="input-numpad-btn" onclick="modalInput('1')">1</button>
+                <button class="input-numpad-btn" onclick="modalInput('2')">2</button>
+                <button class="input-numpad-btn" onclick="modalInput('3')">3</button>
+
+                <button class="input-numpad-btn backspace" onclick="modalBackspace()">⌫</button>
+                <button class="input-numpad-btn operator" onclick="modalInput('0')">0</button>
+                <button class="input-numpad-btn operator" onclick="modalInput('.')">.</button>
+
+                <button class="input-numpad-btn operator" onclick="modalInput('-')">−</button>
+                <button class="input-numpad-btn" colspan="2"></button>
+                <button class="input-numpad-btn next" onclick="modalNext()">→ NEXT</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // ===== SHOT METRICS FIELDS =====
+        const SHOT_FIELDS = [
+            { key: "AA", label: "AA", fullName: "Attack Angle" },
+            { key: "SL", label: "SL", fullName: "Spin Loft" },
+            { key: "BS", label: "BS", fullName: "Ball Speed" },
+            { key: "LA", label: "LA", fullName: "Launch Angle" },
+            { key: "SR", label: "SR", fullName: "Spin Rate" },
+            { key: "HE", label: "HE", fullName: "Height" },
+            { key: "CP", label: "CP", fullName: "Club Path" },
+            { key: "FP", label: "FP", fullName: "Face to Path" },
+            { key: "LP", label: "LP", fullName: "Low Point" },
+            { key: "Carry", label: "Carry", fullName: "Carry Distance" }
+        ];
+
         // ===== DATA STRUCTURE & CONFIG =====
         const phases = [
             {
                 id: 1,
                 title: "Warm-up & Rhythm",
-                duration: 15, // minutes
+                duration: 15,
                 drills: [
                     "Joints rotation",
                     "Wedge shots (50% power)",
                     "'Feet together' 7-iron drills"
                 ],
-                hasMetrics: false,
+                hasShots: true,
                 metrics: {}
             },
             {
@@ -429,10 +684,7 @@
                     "Heavy Compression (AA -5.0°)",
                     "Shallow Compression (AA -2.0°)"
                 ],
-                hasMetrics: true,
-                metricFields: [
-                    { key: "sweetSpotAA", label: "Sweet Spot Attack Angle (AA °)", placeholder: "e.g., -3.5" }
-                ],
+                hasShots: true,
                 metrics: {}
             },
             {
@@ -444,10 +696,7 @@
                     "Straight (Zeroed)",
                     "Fade (Path -)"
                 ],
-                hasMetrics: true,
-                metricFields: [
-                    { key: "drawCP", label: "Club Path for Draw (CP °)", placeholder: "e.g., +2.5" }
-                ],
+                hasShots: true,
                 metrics: {}
             },
             {
@@ -460,7 +709,7 @@
                     "High Launch (High)",
                     "Challenge: Hit 3 different heights in a row"
                 ],
-                hasMetrics: false,
+                hasShots: true,
                 metrics: {}
             },
             {
@@ -472,19 +721,24 @@
                     "Stretching",
                     "Log final session summary"
                 ],
-                hasMetrics: true,
-                metricFields: [
-                    { key: "sessionSummary", label: "Session Summary Notes", placeholder: "What did you learn today?", type: "textarea" }
-                ],
+                hasShots: true,
                 metrics: {}
             }
         ];
 
-        const STORAGE_KEY = "golfTrainingSession";
+        const STORAGE_KEY = "golfTrainingSessionProV2";
         let sessionState = {
             startTime: null,
             totalElapsedSeconds: 0,
             phases: {}
+        };
+
+        let inputModalState = {
+            isOpen: false,
+            currentPhase: null,
+            currentFieldIndex: 0,
+            currentShot: {},
+            inputBuffer: ""
         };
 
         // ===== INITIALIZATION =====
@@ -509,7 +763,7 @@
                     sessionState.phases[phase.id] = {
                         status: phase.id === 1 ? "active" : "locked",
                         drillsCompleted: new Array(phase.drills.length).fill(false),
-                        metrics: {},
+                        shots: [],
                         timerSeconds: phase.duration * 60
                     };
                 });
@@ -538,6 +792,91 @@
                 `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         }
 
+        // ===== GUIDED INPUT MODAL =====
+        function openInputModal(phaseId) {
+            inputModalState.isOpen = true;
+            inputModalState.currentPhase = phaseId;
+            inputModalState.currentFieldIndex = 0;
+            inputModalState.currentShot = {};
+            inputModalState.inputBuffer = "";
+
+            document.getElementById("input-modal-overlay").classList.add("active");
+            updateModalDisplay();
+        }
+
+        function closeInputModal() {
+            inputModalState.isOpen = false;
+            document.getElementById("input-modal-overlay").classList.remove("active");
+            inputModalState.currentShot = {};
+            inputModalState.inputBuffer = "";
+        }
+
+        function updateModalDisplay() {
+            const field = SHOT_FIELDS[inputModalState.currentFieldIndex];
+            const stepNum = inputModalState.currentFieldIndex + 1;
+
+            document.getElementById("modal-step-text").textContent = `Step ${stepNum}/10`;
+            document.getElementById("modal-metric-name").textContent = `${field.label} (${field.fullName})`;
+            document.getElementById("modal-display-value").textContent = inputModalState.inputBuffer || "0";
+        }
+
+        function modalInput(char) {
+            if (char === '-') {
+                if (!inputModalState.inputBuffer.includes('-') && inputModalState.inputBuffer !== "") {
+                    inputModalState.inputBuffer = '-' + inputModalState.inputBuffer;
+                } else if (inputModalState.inputBuffer === "") {
+                    inputModalState.inputBuffer = '-';
+                }
+            } else if (char === '.') {
+                if (!inputModalState.inputBuffer.includes('.')) {
+                    if (inputModalState.inputBuffer === "" || inputModalState.inputBuffer === "-") {
+                        inputModalState.inputBuffer += "0.";
+                    } else {
+                        inputModalState.inputBuffer += ".";
+                    }
+                }
+            } else {
+                inputModalState.inputBuffer += char;
+            }
+            document.getElementById("modal-display-value").textContent = inputModalState.inputBuffer || "0";
+        }
+
+        function modalBackspace() {
+            inputModalState.inputBuffer = inputModalState.inputBuffer.slice(0, -1);
+            document.getElementById("modal-display-value").textContent = inputModalState.inputBuffer || "0";
+        }
+
+        function modalNext() {
+            const field = SHOT_FIELDS[inputModalState.currentFieldIndex];
+            const value = inputModalState.inputBuffer || "0";
+
+            inputModalState.currentShot[field.key] = value;
+            inputModalState.inputBuffer = "";
+
+            inputModalState.currentFieldIndex++;
+
+            if (inputModalState.currentFieldIndex >= SHOT_FIELDS.length) {
+                // All fields complete - save the shot
+                saveShotFromModal();
+            } else {
+                updateModalDisplay();
+            }
+        }
+
+        function saveShotFromModal() {
+            const phaseId = inputModalState.currentPhase;
+            const phaseState = sessionState.phases[phaseId];
+
+            // Create shot string in order
+            const shotString = SHOT_FIELDS.map(field => inputModalState.currentShot[field.key]).join(" ");
+
+            phaseState.shots.push(shotString);
+            saveSessionState();
+
+            closeInputModal();
+            renderPhases();
+        }
+
         // ===== PHASE RENDERING =====
         function renderPhases() {
             const container = document.getElementById("phases-container");
@@ -552,22 +891,48 @@
                 const phaseCard = document.createElement("div");
                 phaseCard.className = `phase-card ${isActive ? "active" : ""} ${isCompleted ? "completed" : ""} ${isLocked ? "locked" : ""}`;
 
-                let statusBadge = "locked";
-                if (isCompleted) statusBadge = "completed";
-                else if (isActive) statusBadge = "active";
-
                 const drillsCompleted = phaseState.drillsCompleted.filter(Boolean).length;
                 const totalDrills = phase.drills.length;
 
                 let badgeText = "🔒 Locked";
-                if (isCompleted) badgeText = "✓ Completed";
-                else if (isActive) badgeText = "● Active";
+                let statusBadge = "locked";
+                if (isCompleted) {
+                    badgeText = "✓ Completed";
+                    statusBadge = "completed";
+                } else if (isActive) {
+                    badgeText = "● Active";
+                    statusBadge = "active";
+                }
+
+                let shotsHtml = "";
+                if (phase.hasShots && !isLocked) {
+                    const shotCount = phaseState.shots.length;
+                    shotsHtml = `
+                        <div class="shots-history-section">
+                            <div class="shots-history-title">📊 Logged Shots (${shotCount})</div>
+                            <button class="btn-log-shot" onclick="openInputModal(${phase.id})">
+                                🎯 Log New Shot (Fast Input)
+                            </button>
+                            <div class="shots-list">
+                                ${phaseState.shots.length === 0 ? 
+                                    `<div class="no-shots-message">No shots logged yet. Click "Log New Shot" to start.</div>` :
+                                    phaseState.shots.map((shot, idx) => `
+                                        <div class="shot-entry">
+                                            <div class="shot-entry-text">${shot}</div>
+                                            <button class="shot-delete-btn" onclick="deleteShot(${phase.id}, ${idx})">Delete</button>
+                                        </div>
+                                    `).join("")
+                                }
+                            </div>
+                        </div>
+                    `;
+                }
 
                 phaseCard.innerHTML = `
                     <div class="phase-header">
                         <div>
                             <div class="phase-title">Phase ${phase.id}: ${phase.title}</div>
-                            <div class="phase-time">${phase.duration} minutes</div>
+                            <div style="color: #79c0ff; font-size: 0.875rem; font-weight: 600;">${phase.duration} minutes</div>
                         </div>
                         <span class="phase-badge ${statusBadge}">${badgeText}</span>
                     </div>
@@ -585,34 +950,13 @@
                         `).join("")}
                     </div>
 
-                    ${phase.hasMetrics ? `
-                        <div class="metrics-section">
-                            <div style="font-weight: 600; margin-bottom: 1rem; color: #58a6ff;">
-                                📊 Log Your Metrics
-                            </div>
-                            <div id="phase-${phase.id}-metrics">
-                                ${phase.metricFields.map(field => `
-                                    <div class="metric-input-group">
-                                        <label class="metric-label">${field.label}</label>
-                                        <${field.type === "textarea" ? "textarea" : "input"} 
-                                            type="${field.type === "textarea" ? "" : "number"}"
-                                            class="metric-input"
-                                            data-phase="${phase.id}" data-metric="${field.key}"
-                                            placeholder="${field.placeholder}"
-                                            ${field.type === "textarea" ? "style='resize: vertical; min-height: 100px;'" : "step='0.1'"}
-                                            onchange="saveMetric(${phase.id}, '${field.key}', this.value)">
-                                        ${field.type === "textarea" ? "</textarea>" : "</input>"}
-                                    </div>
-                                `).join("")}
-                            </div>
-                        </div>
-                    ` : ""}
+                    ${shotsHtml}
 
                     <div class="button-group">
                         ${!isCompleted ? `
                             <button class="btn btn-primary" 
                                 onclick="completePhase(${phase.id})"
-                                ${drillsCompleted < totalDrills || isLocked ? "disabled style='opacity: 0.5; cursor: not-allowed;'" : ""}>
+                                ${drillsCompleted < totalDrills || isLocked ? "disabled" : ""}>
                                 Mark Complete
                             </button>
                         ` : ""}
@@ -623,19 +967,6 @@
                 `;
 
                 container.appendChild(phaseCard);
-
-                // Restore metric values
-                if (phase.hasMetrics && phase.metricFields) {
-                    phase.metricFields.forEach(field => {
-                        const input = document.querySelector(
-                            `input[data-phase="${phase.id}"][data-metric="${field.key}"], 
-                             textarea[data-phase="${phase.id}"][data-metric="${field.key}"]`
-                        );
-                        if (input && phaseState.metrics[field.key]) {
-                            input.value = phaseState.metrics[field.key];
-                        }
-                    });
-                }
             });
         }
 
@@ -647,17 +978,18 @@
             renderPhases();
         }
 
-        function saveMetric(phaseId, metricKey, value) {
-            const phaseState = sessionState.phases[phaseId];
-            phaseState.metrics[metricKey] = value;
-            saveSessionState();
+        function deleteShot(phaseId, shotIndex) {
+            if (confirm("Delete this shot?")) {
+                sessionState.phases[phaseId].shots.splice(shotIndex, 1);
+                saveSessionState();
+                renderPhases();
+            }
         }
 
         function completePhase(phaseId) {
             const phaseState = sessionState.phases[phaseId];
             const phase = phases.find(p => p.id === phaseId);
 
-            // Check if all drills are completed
             const allCompleted = phaseState.drillsCompleted.every(Boolean);
             if (!allCompleted) {
                 alert("Please complete all drills before marking the phase as complete.");
@@ -666,7 +998,6 @@
 
             phaseState.status = "completed";
 
-            // Unlock next phase
             if (phaseId < phases.length) {
                 sessionState.phases[phaseId + 1].status = "active";
             }
@@ -677,10 +1008,11 @@
         }
 
         function resetPhase(phaseId) {
+            const phase = phases.find(p => p.id === phaseId);
             const phaseState = sessionState.phases[phaseId];
-            phaseState.drillsCompleted = new Array(phases[phaseId - 1].drills.length).fill(false);
+            phaseState.drillsCompleted = new Array(phase.drills.length).fill(false);
             phaseState.status = "active";
-            phaseState.metrics = {};
+            phaseState.shots = [];
             saveSessionState();
             renderPhases();
         }
@@ -699,6 +1031,40 @@
             document.getElementById("progress-text").textContent = percentage + "%";
         }
 
+        // ===== EXPORT FUNCTIONALITY =====
+        function generateAllExport() {
+            let exportLines = [];
+
+            phases.forEach(phase => {
+                const phaseState = sessionState.phases[phase.id];
+                if (phaseState.shots.length > 0) {
+                    exportLines.push(`[Phase ${phase.id}: ${phase.title}]`);
+                    phaseState.shots.forEach(shot => {
+                        exportLines.push(shot);
+                    });
+                    exportLines.push(""); // blank line between phases
+                }
+            });
+
+            if (exportLines.length === 0) {
+                alert("No shots logged yet. Please log shots in the training phases.");
+                return;
+            }
+
+            const exportText = exportLines.join("\n");
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(exportText).then(() => {
+                const feedback = document.getElementById("copy-feedback");
+                feedback.classList.add("show");
+                setTimeout(() => {
+                    feedback.classList.remove("show");
+                }, 2000);
+            }).catch(() => {
+                alert("Could not copy to clipboard. Please try again.");
+            });
+        }
+
         // ===== RESET SESSION =====
         function resetSession() {
             if (confirm("Are you sure you want to reset the entire session? This cannot be undone.")) {
@@ -712,7 +1078,7 @@
                     sessionState.phases[phase.id] = {
                         status: phase.id === 1 ? "active" : "locked",
                         drillsCompleted: new Array(phase.drills.length).fill(false),
-                        metrics: {},
+                        shots: [],
                         timerSeconds: phase.duration * 60
                     };
                 });
