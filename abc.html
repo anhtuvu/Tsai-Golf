@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>DailyBlock | Golf Session</title>
+    <style>
+        :root {
+            --bg: #121212;
+            --surface: #1e1e1e;
+            --primary: #3b82f6;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        /* App Header */
+        header {
+            background-color: var(--surface);
+            padding: 16px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        .container {
+            padding: 16px;
+            max-width: 768px;
+            margin: 0 auto;
+            padding-bottom: 40px;
+        }
+
+        /* Phase Styling */
+        .phase-title {
+            font-size: 0.875rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            margin: 28px 0 12px 4px;
+        }
+
+        /* Block Card */
+        .block {
+            background-color: var(--surface);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: background-color 0.2s ease;
+        }
+
+        .block-header {
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .block-header:active {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .block-title {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .play-icon {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            transition: transform 0.3s ease;
+        }
+
+        .block.active .play-icon {
+            transform: rotate(90deg);
+            color: var(--primary);
+        }
+
+        .block.active .block-header {
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Iframe Container - 16:9 Aspect Ratio */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            display: none;
+            background-color: #000;
+        }
+
+        .block.active .video-container {
+            display: block;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Training Session</h1>
+    </header>
+
+    <div class="container">
+        
+        <div class="phase-title">Phase 1: Calibration</div>
+        
+        <div class="block" onclick="toggleVideo(this, 'VIjwmKgtiyA', 447)">
+            <div class="block-header">
+                <span class="block-title">Block 1: Setup Drill</span>
+                <span class="play-icon">▶</span>
+            </div>
+            <div class="video-container"></div>
+        </div>
+
+        <div class="block" onclick="toggleVideo(this, 'VIjwmKgtiyA', 257)">
+            <div class="block-header">
+                <span class="block-title">Block 2: Chống Sway</span>
+                <span class="play-icon">▶</span>
+            </div>
+            <div class="video-container"></div>
+        </div>
+
+        <div class="phase-title">Phase 2: Core Mechanics & Flow</div>
+        
+        <div class="block" onclick="toggleVideo(this, 'VIjwmKgtiyA', 568)">
+            <div class="block-header">
+                <span class="block-title">Áp dụng 5-Ball Session</span>
+                <span class="play-icon">▶</span>
+            </div>
+            <div class="video-container"></div>
+        </div>
+
+        <div class="block" onclick="toggleVideo(this, 'VIjwmKgtiyA', 1222)">
+            <div class="block-header">
+                <span class="block-title">Block 1: Pivot / Miết gậy</span>
+                <span class="play-icon">▶</span>
+            </div>
+            <div class="video-container"></div>
+        </div>
+
+        <div class="block" onclick="toggleVideo(this, 'VIjwmKgtiyA', 1343)">
+            <div class="block-header">
+                <span class="block-title">Block 2: Stretch / Transition</span>
+                <span class="play-icon">▶</span>
+            </div>
+            <div class="video-container"></div>
+        </div>
+
+        <div class="block" onclick="toggleVideo(this, 'VIjwmKgtiyA', 1024)">
+            <div class="block-header">
+                <span class="block-title">Block 3: Punch / Compression</span>
+                <span class="play-icon">▶</span>
+            </div>
+            <div class="video-container"></div>
+        </div>
+
+        <div class="phase-title">Phase 3: Driver Integration</div>
+        
+        <div class="block" onclick="toggleVideo(this, 'VIjwmKgtiyA', 1918)">
+            <div class="block-header">
+                <span class="block-title">Setup Driver & Cắm Tee</span>
+                <span class="play-icon">▶</span>
+            </div>
+            <div class="video-container"></div>
+        </div>
+
+        <div class="phase-title">Phase 4: Performance / Simulation</div>
+        
+        <div class="block" onclick="toggleVideo(this, 'VIjwmKgtiyA', 2667)">
+            <div class="block-header">
+                <span class="block-title">Thực thi 5 bước</span>
+                <span class="play-icon">▶</span>
+            </div>
+            <div class="video-container"></div>
+        </div>
+
+    </div>
+
+    <script>
+        // DOM logic kiểm soát state của các block video
+        function toggleVideo(blockElement, videoId, startTime) {
+            const isActive = blockElement.classList.contains('active');
+            const videoContainer = blockElement.querySelector('.video-container');
+
+            // Singleton pattern: Dọn dẹp DOM - Đóng tất cả iframe đang mở để tránh ngốn RAM và xung đột âm thanh
+            document.querySelectorAll('.block.active').forEach(activeBlock => {
+                if (activeBlock !== blockElement) {
+                    activeBlock.classList.remove('active');
+                    activeBlock.querySelector('.video-container').innerHTML = ''; // Hủy iframe
+                }
+            });
+
+            // Toggle trạng thái của block hiện tại
+            if (!isActive) {
+                blockElement.classList.add('active');
+                // Inject iframe với params: t (start), rel=0 (ẩn video liên quan), autoplay=1
+                videoContainer.innerHTML = `
+                    <iframe 
+                        src="https://www.youtube.com/embed/${videoId}?start=${startTime}&autoplay=1&rel=0&playsinline=1" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                `;
+                
+                // UX: Tự động scroll block lên giữa màn hình để focus vào video
+                setTimeout(() => {
+                    blockElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 150);
+            } else {
+                blockElement.classList.remove('active');
+                videoContainer.innerHTML = ''; // Clear iframe khi đóng
+            }
+        }
+    </script>
+</body>
+</html>
